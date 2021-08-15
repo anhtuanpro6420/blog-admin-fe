@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'antd';
-import './App.scss';
+import './App.less';
 
 function App(): JSX.Element {
 	return (
