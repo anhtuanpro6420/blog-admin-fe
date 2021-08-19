@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Table } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from '../../axios-instance';
 import { getPosts } from '../../store/actions/post.action';
+import RootState from '../../shared/models/root-state.model';
 
 const columns = [
 	{
@@ -34,15 +35,22 @@ const getRandomuserParams = (params: any) => ({
 });
 
 const Home: FC = () => {
+	const postsState = useSelector((state: RootState) => state.post);
+	const dispatch = useDispatch();
+
 	const [posts, setPosts] = useState([]);
-	const [curPage, setCurPage] = useState(1);
+	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const dispatch = useDispatch();
+	console.log(postsState);
 
 	useEffect(() => {
-		dispatch(getPosts());
+		const queryOptions = {
+			page,
+			limit,
+		};
+		dispatch(getPosts(queryOptions));
 	}, []);
 
 	return <div>Home</div>;

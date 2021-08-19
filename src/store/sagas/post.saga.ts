@@ -5,7 +5,6 @@ import axios from '../../axios-instance';
 
 const getPosts = async (): Promise<Post> => {
 	const { data } = await axios.get('/v1/posts');
-	console.log(data);
 	return data;
 };
 
