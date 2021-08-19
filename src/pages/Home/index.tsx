@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Table } from 'antd';
+import { useDispatch } from 'react-redux';
 import axios from '../../axios-instance';
+import { getPosts } from '../../store/actions/post.action';
 
 const columns = [
 	{
@@ -37,16 +39,10 @@ const Home: FC = () => {
 	const [limit, setLimit] = useState(10);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const getPosts = async () => {
-		const {
-			data: { data: result },
-		} = await axios.get('/api/v1/posts');
-		setPosts(result);
-		return result;
-	};
+	const dispatch = useDispatch();
 
 	useEffect(() => {
-		getPosts();
+		dispatch(getPosts());
 	}, []);
 
 	return <div>Home</div>;
