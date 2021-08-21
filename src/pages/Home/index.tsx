@@ -3,8 +3,8 @@ import { Space, Table, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ITag } from 'shared/models/tag.model';
-import { Post } from 'shared/models/post.model';
-import { getPosts } from '../../store/actions/post.action';
+import { IPost } from 'shared/models/post.model';
+import { getPosts, deletePost } from '../../store/actions/post.action';
 import RootState from '../../shared/models/root-state.model';
 
 const Home: FC = () => {
@@ -21,12 +21,15 @@ const Home: FC = () => {
         });
     };
 
-    const handleEdit = (post: Post) => {
+    const handleEdit = (post: IPost) => {
         console.log(post);
+        // dispatch(getPosts(queryOptions));
     };
 
-    const handleDelete = (post: Post) => {
+    const handleDelete = (post: IPost) => {
         console.log(post);
+        const { _id: postId } = post || {};
+        dispatch(deletePost(postId));
     };
 
     const columns = [
@@ -49,7 +52,7 @@ const Home: FC = () => {
         {
             title: 'Action',
             key: 'action',
-            render: (text: string, post: Post) => (
+            render: (text: string, post: IPost) => (
                 <Space size='middle'>
                     <EditOutlined onClick={() => handleEdit(post)} />
                     <DeleteOutlined onClick={() => handleDelete(post)} />
