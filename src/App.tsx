@@ -5,15 +5,15 @@ import Home from 'pages/Home';
 import Wrapper from 'components/Wrapper';
 
 function App(): JSX.Element {
-	const routes = (
-		<Switch>
-			<Route path='/home'>
-				<Home />
-			</Route>
-			<Redirect to='/home' />
-		</Switch>
-	);
-	return <Wrapper>{routes}</Wrapper>;
+    const routes = (
+        <Switch>
+            <Route path='/home'>
+                <Home />
+            </Route>
+            <Redirect to='/home' />
+        </Switch>
+    );
+    return <Wrapper>{routes}</Wrapper>;
 }
 
 export default App;
