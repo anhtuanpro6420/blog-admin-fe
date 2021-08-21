@@ -54,7 +54,6 @@ function* updatePost(action: IAction) {
 
 function* createPost(action: IAction) {
     try {
-        console.log(action.payload);
         const result: IPost = yield call(postApi.createPost, action.payload);
         yield put(createPostSuccess(result));
     } catch (err) {

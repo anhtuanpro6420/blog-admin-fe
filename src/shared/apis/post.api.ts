@@ -15,13 +15,15 @@ const deletePost = async (postId: string): Promise<IPost> => {
 };
 
 const updatePost = async (post: IPost): Promise<IPost> => {
-    const { _id: postId } = post || {};
-    const { data } = await axios.patch(`/v1/posts/${postId}`, post);
+    const { _id: postId, title = '', content = '' } = post || {};
+    const { data } = await axios.patch(`/v1/posts/${postId}`, {
+        title,
+        content,
+    });
     return data;
 };
 
 const createPost = async (post: IPost): Promise<IPost> => {
-    console.log(post);
     const { data } = await axios.post(`/v1/posts`, post);
     return data;
 };

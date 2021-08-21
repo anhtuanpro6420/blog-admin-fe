@@ -2,7 +2,7 @@ import { IMetadata } from './common.model';
 import { ITag } from './tag.model';
 
 export interface IPost {
-    _id: string;
+    _id?: string | undefined;
     title: string;
     content: string;
     tags: Array<ITag>;

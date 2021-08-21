@@ -1,18 +1,27 @@
 import React, { FC } from 'react';
 import { Button, Form, Input } from 'antd';
+import { IPost } from 'shared/models/post.model';
 
 interface Props {
     onFinish: any;
     onFinishFailed: any;
+    post?: IPost;
 }
 
-const CreatingForm: FC<Props> = ({ onFinish, onFinishFailed }) => {
+const PostForm: FC<Props> = ({ onFinish, onFinishFailed, post = null }) => {
+    const initValues = () => {
+        if (!post) {
+            return {};
+        }
+        const { title, content } = post || {};
+        return { title, content };
+    };
     return (
         <Form
             name='basic'
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
-            initialValues={{ remember: true }}
+            initialValues={initValues()}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
         >
@@ -45,4 +54,4 @@ const CreatingForm: FC<Props> = ({ onFinish, onFinishFailed }) => {
     );
 };
 
-export default CreatingForm;
+export default PostForm;

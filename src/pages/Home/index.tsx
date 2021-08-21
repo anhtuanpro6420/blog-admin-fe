@@ -8,9 +8,10 @@ import {
     getPosts,
     deletePost,
     createPost,
+    updatePost,
 } from '../../store/actions/post.action';
 import RootState from '../../shared/models/root-state.model';
-import CreatingForm from './CreatingForm';
+import PostForm from './PostForm';
 
 const Home: FC = () => {
     const posts = useSelector((state: RootState) => state.post.data);
@@ -20,6 +21,7 @@ const Home: FC = () => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
 
     const renderTags = (tags: Array<ITag>) => {
         return tags.map(tag => {
@@ -28,12 +30,12 @@ const Home: FC = () => {
     };
 
     const handleEdit = (post: IPost) => {
-        console.log(post);
         setIsModalVisible(true);
+        setSelectedPost(post);
     };
 
     const handleDelete = (post: IPost) => {
-        const { _id: postId } = post || {};
+        const { _id: postId = '' } = post || {};
         dispatch(deletePost(postId));
     };
 
@@ -76,6 +78,7 @@ const Home: FC = () => {
 
     useEffect(() => {
         setIsModalVisible(false);
+        setSelectedPost(null);
     }, [posts]);
 
     const handleTableChange = (pagination: any, filters: any, sorter: any) => {
@@ -89,12 +92,15 @@ const Home: FC = () => {
     };
 
     const handleCreatingPost = (post: IPost) => {
-        console.log(post);
-        // setIsModalVisible(false);
         dispatch(createPost(post));
     };
 
-    const handleCreatingPostFailed = (error: any) => {
+    const handleUpdatingPost = (post: IPost) => {
+        const updatingPost: IPost = { ...post, _id: selectedPost!._id };
+        dispatch(updatePost(updatingPost));
+    };
+
+    const handleSubmitFailed = (error: any) => {
         console.log(error);
     };
 
@@ -114,10 +120,18 @@ const Home: FC = () => {
                 onChange={handleTableChange}
             />
             <Modal title='New post' visible={isModalVisible} footer={null}>
-                <CreatingForm
-                    onFinish={handleCreatingPost}
-                    onFinishFailed={handleCreatingPostFailed}
-                />
+                {selectedPost ? (
+                    <PostForm
+                        onFinish={handleUpdatingPost}
+                        onFinishFailed={handleSubmitFailed}
+                        post={selectedPost}
+                    />
+                ) : (
+                    <PostForm
+                        onFinish={handleCreatingPost}
+                        onFinishFailed={handleSubmitFailed}
+                    />
+                )}
             </Modal>
         </div>
     );
