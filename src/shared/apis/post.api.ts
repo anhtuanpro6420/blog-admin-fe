@@ -20,4 +20,10 @@ const updatePost = async (post: IPost): Promise<IPost> => {
     return data;
 };
 
-export default { getPosts, deletePost, updatePost };
+const createPost = async (post: IPost): Promise<IPost> => {
+    console.log(post);
+    const { data } = await axios.post(`/v1/posts`, post);
+    return data;
+};
+
+export default { getPosts, deletePost, updatePost, createPost };

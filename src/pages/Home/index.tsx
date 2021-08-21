@@ -1,11 +1,16 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Space, Table, Tag } from 'antd';
+import { Button, Modal, Space, Table, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ITag } from 'shared/models/tag.model';
 import { IPost } from 'shared/models/post.model';
-import { getPosts, deletePost } from '../../store/actions/post.action';
+import {
+    getPosts,
+    deletePost,
+    createPost,
+} from '../../store/actions/post.action';
 import RootState from '../../shared/models/root-state.model';
+import CreatingForm from './CreatingForm';
 
 const Home: FC = () => {
     const posts = useSelector((state: RootState) => state.post.data);
@@ -14,6 +19,7 @@ const Home: FC = () => {
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const renderTags = (tags: Array<ITag>) => {
         return tags.map(tag => {
@@ -23,11 +29,10 @@ const Home: FC = () => {
 
     const handleEdit = (post: IPost) => {
         console.log(post);
-        // dispatch(getPosts(queryOptions));
+        setIsModalVisible(true);
     };
 
     const handleDelete = (post: IPost) => {
-        console.log(post);
         const { _id: postId } = post || {};
         dispatch(deletePost(postId));
     };
@@ -69,14 +74,33 @@ const Home: FC = () => {
         dispatch(getPosts(queryOptions));
     }, [page, limit]);
 
+    useEffect(() => {
+        setIsModalVisible(false);
+    }, [posts]);
+
     const handleTableChange = (pagination: any, filters: any, sorter: any) => {
         const { current: currentPage = 1, pageSize = 10 } = pagination || {};
         setPage(currentPage);
         setLimit(pageSize);
     };
 
+    const handleNewPostClicked = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleCreatingPost = (post: IPost) => {
+        console.log(post);
+        // setIsModalVisible(false);
+        dispatch(createPost(post));
+    };
+
+    const handleCreatingPostFailed = (error: any) => {
+        console.log(error);
+    };
+
     return (
         <div className='home-page'>
+            <Button onClick={handleNewPostClicked}>New Post</Button>
             <Table
                 rowKey='_id'
                 columns={columns}
@@ -89,6 +113,12 @@ const Home: FC = () => {
                 }}
                 onChange={handleTableChange}
             />
+            <Modal title='New post' visible={isModalVisible} footer={null}>
+                <CreatingForm
+                    onFinish={handleCreatingPost}
+                    onFinishFailed={handleCreatingPostFailed}
+                />
+            </Modal>
         </div>
     );
 };

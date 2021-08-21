@@ -6,6 +6,12 @@ import {
     DELETE_POST_START,
     DELETE_POST_SUCCESS,
     DELETE_POST_ERROR,
+    UPDATE_POST_START,
+    UPDATE_POST_SUCCESS,
+    UPDATE_POST_ERROR,
+    CREATE_POST_START,
+    CREATE_POST_SUCCESS,
+    CREATE_POST_ERROR,
 } from '../action-contstants/post.constant';
 import postSvc from '../services/post.service';
 
@@ -68,13 +74,64 @@ const postReducer = (state = INITIAL_STATE, action: any) => {
             const { message } = action.payload || {};
             return {
                 ...state,
-                data: [],
-                metadata: {},
                 isLoading: false,
                 error: { message },
             };
         }
-
+        case UPDATE_POST_START: {
+            return {
+                ...state,
+                isLoading: true,
+            };
+        }
+        case UPDATE_POST_SUCCESS: {
+            const updatedPost = action.payload;
+            const newPosts: Array<IPost> = postSvc.updatePost(
+                updatedPost,
+                state.data
+            );
+            return {
+                ...state,
+                data: newPosts,
+                isLoading: false,
+                error: null,
+            };
+        }
+        case UPDATE_POST_ERROR: {
+            const { message } = action.payload || {};
+            return {
+                ...state,
+                isLoading: false,
+                error: { message },
+            };
+        }
+        case CREATE_POST_START: {
+            return {
+                ...state,
+                isLoading: true,
+            };
+        }
+        case CREATE_POST_SUCCESS: {
+            const createdPost = action.payload;
+            const newPosts: Array<IPost> = postSvc.createPost(
+                createdPost,
+                state.data
+            );
+            return {
+                ...state,
+                data: newPosts,
+                isLoading: false,
+                error: null,
+            };
+        }
+        case CREATE_POST_ERROR: {
+            const { message } = action.payload || {};
+            return {
+                ...state,
+                isLoading: false,
+                error: { message },
+            };
+        }
         default:
             return state;
     }
