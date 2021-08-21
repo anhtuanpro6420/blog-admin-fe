@@ -1,49 +1,42 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from '../../axios-instance';
+import { ITag } from 'shared/models/tag.model';
 import { getPosts } from '../../store/actions/post.action';
 import RootState from '../../shared/models/root-state.model';
 
+const renderTags = (tags: Array<ITag>) => {
+	return tags.map(tag => {
+		return <Tag key={tag._id}>{tag.name.toUpperCase()}</Tag>;
+	});
+};
+
 const columns = [
 	{
-		title: 'Name',
-		dataIndex: 'name',
+		title: 'Title',
+		dataIndex: 'title',
 		sorter: true,
-		// render: (name: string) => `${name.first} ${name.last}`,
 		width: '20%',
 	},
 	{
-		title: 'Gender',
-		dataIndex: 'gender',
-		filters: [
-			{ text: 'Male', value: 'male' },
-			{ text: 'Female', value: 'female' },
-		],
+		title: 'Content',
+		dataIndex: 'content',
 		width: '20%',
 	},
 	{
-		title: 'Email',
-		dataIndex: 'email',
+		title: 'Tags',
+		dataIndex: 'tags',
+		render: (tags: Array<ITag>) => renderTags(tags),
 	},
 ];
 
-const getRandomuserParams = (params: any) => ({
-	results: params.pagination.pageSize,
-	page: params.pagination.current,
-	...params,
-});
-
 const Home: FC = () => {
-	const postsState = useSelector((state: RootState) => state.post);
+	const posts = useSelector((state: RootState) => state.post.data);
+	const metadata = useSelector((state: RootState) => state.post.metadata);
+	const { total = 0 } = metadata || {};
 	const dispatch = useDispatch();
-
-	const [posts, setPosts] = useState([]);
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
-	const [isLoading, setIsLoading] = useState(false);
-
-	console.log(postsState);
 
 	useEffect(() => {
 		const queryOptions = {
@@ -51,9 +44,30 @@ const Home: FC = () => {
 			limit,
 		};
 		dispatch(getPosts(queryOptions));
-	}, []);
+	}, [page, limit]);
 
-	return <div>Home</div>;
+	const handleTableChange = (pagination: any, filters: any, sorter: any) => {
+		const { current: currentPage = 1, pageSize = 10 } = pagination || {};
+		setPage(currentPage);
+		setLimit(pageSize);
+	};
+
+	return (
+		<div className='home-page'>
+			<Table
+				rowKey='_id'
+				columns={columns}
+				dataSource={posts}
+				pagination={{
+					total,
+					defaultPageSize: 10,
+					showSizeChanger: true,
+					pageSizeOptions: ['10', '20', '30'],
+				}}
+				onChange={handleTableChange}
+			/>
+		</div>
+	);
 };
 
 export default Home;
