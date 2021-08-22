@@ -32,6 +32,7 @@ const Home: FC = () => {
     const handleEdit = (post: IPost) => {
         setIsModalVisible(true);
         setSelectedPost(post);
+        console.log(selectedPost);
     };
 
     const handleDelete = (post: IPost) => {
@@ -119,7 +120,13 @@ const Home: FC = () => {
                 }}
                 onChange={handleTableChange}
             />
-            <Modal title='New post' visible={isModalVisible} footer={null}>
+            <Modal
+                title='New post'
+                visible={isModalVisible}
+                footer={null}
+                width='100%'
+                destroyOnClose
+            >
                 {selectedPost ? (
                     <PostForm
                         onFinish={handleUpdatingPost}
@@ -130,6 +137,7 @@ const Home: FC = () => {
                     <PostForm
                         onFinish={handleCreatingPost}
                         onFinishFailed={handleSubmitFailed}
+                        post={undefined}
                     />
                 )}
             </Modal>
