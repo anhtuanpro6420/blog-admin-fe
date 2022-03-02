@@ -9,9 +9,9 @@ import {
     deletePost,
     createPost,
     updatePost,
-} from '../../store/actions/post.action';
-import RootState from '../../shared/models/root-state.model';
-import PostForm from './PostForm';
+} from 'store/actions/post.action';
+import RootState from 'shared/models/root-state.model';
+import PostForm from 'components/PostForm';
 
 const Home: FC = () => {
     const posts = useSelector((state: RootState) => state.post.data);
