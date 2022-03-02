@@ -17,7 +17,6 @@
         "antd": "^4.16.11",
         "axios": "^0.21.1",
         "craco-less": "^1.18.0",
-        "node-sass": "4.14.1",
         "query-string": "^7.0.1",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
@@ -64,6 +63,7 @@
         "eslint-plugin-prettier": "^3.4.0",
         "eslint-plugin-react": "^7.24.0",
         "eslint-plugin-react-hooks": "^4.2.0",
-        "prettier": "^2.3.1"
+        "prettier": "^2.3.1",
+        "sass": "^1.49.9"
     }
 }
